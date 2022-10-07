@@ -1,0 +1,23 @@
+ENV: test
+LOG_LEVEL: DEBUG
+LOG_FILE: stdout
+ENABLE_APOLLO: false
+DATABASES:
+  xxx:
+    HOST: service-mysql
+    DRIVER: mysql
+    PORT: 3306
+    DBNAME: xxx
+    USERNAME: user
+    PASSWORD: pass
+SERVICE:
+  NAME: my-demo-service
+  HOST: "0.0.0.0"
+  PORT: 9042
+MINIO:
+  MINIO_BUCKET: common-filestore-dev
+  ENDPOINT: minio.awsnx.xxx.com.cn:80
+  ACCESS_ID: w4skem4VK6g4oLxb
+  ACCESS_KEY: Kkr6cyQQZkeqLrxfLfe76B9P
+  SSL: false
+

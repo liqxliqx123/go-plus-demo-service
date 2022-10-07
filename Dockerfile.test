@@ -1,0 +1,11 @@
+# Copyright (c) 2022 xxx xxx Team. All rights reserved.
+
+ARG REGISTRY_HOST=xxx.xxx.com.cn
+FROM $REGISTRY_HOST/xxx-base/ci-base-go:1.15.1 as build_base
+
+WORKDIR /service/
+
+COPY . .
+RUN go build -mod=vendor -o ./app .
+
+CMD ["./app"]

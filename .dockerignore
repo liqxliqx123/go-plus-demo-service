@@ -1,0 +1,11 @@
+gotests.xml
+gotests.txt
+coverage.xml
+golint-*.txt
+cover_*.out
+dump.rdb
+.cover
+bin/
+.scannerwork/
+.idea
+.vscode

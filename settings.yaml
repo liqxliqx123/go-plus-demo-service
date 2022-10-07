@@ -1,0 +1,17 @@
+ENV: local
+LOG_LEVEL: INFO
+LOG_FILE: stdout
+ENABLE_APOLLO: true
+APOLLO:
+  HOST: xxx
+  APP_ID: xxx
+  CLUSTER: xxx
+  NAMESPACE: xxx
+  TOKEN: xxx
+SERVICE:
+  NAME: my-demo-service
+  HOST: "0.0.0.0"
+  PORT: 8080
+  CONNECTION_TIMEOUT: 300
+  MAKE_xxx_DATA_TIMEOUT: 120
+  xxx_CONSUMER_TIMEOUT: 120

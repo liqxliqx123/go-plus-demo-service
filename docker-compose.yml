@@ -1,0 +1,68 @@
+version: "3.7"
+
+services:
+  service-build:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        REGISTRY_HOST: ${REGISTRY_HOST:-xxx.xxx.com.cn}
+    image: ${REGISTRY_HOST:-xxx.xxx.com.cn}/xxx-xxx/my-demo-service:${IMAGE_TAG:-latest}
+
+  service-run:
+    image: ${REGISTRY_HOST:-xxx.xxx.com.cn}/xxx-xxx/my-demo-service:${IMAGE_TAG:-latest}
+    depends_on:
+      - service-redis
+
+  service-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+      args:
+        REGISTRY_HOST: ${REGISTRY_HOST}
+    image: ${REGISTRY_HOST:-xxx.xxx.com.cn}/xxx-xxx/my-demo-service:${IMAGE_TAG:-latest}
+    depends_on:
+      - service-redis
+      - service-mysql
+    environment:
+      - PROJECT_NAME=${PROJECT_NAME}
+      - SONAR_HOST=${SONAR_HOST}
+      - SONAR_LOGIN=${SONAR_LOGIN}
+      - BRANCH_NAME=${BRANCH_NAME}
+      - DATABASES.MYSQL.DRIVER=mysql
+      - DATABASES.MYSQL.USERNAME=user
+      - DATABASES.MYSQL.PASSWORD=pass
+      - DATABASES.MYSQL.HOST=service-mysql
+      - DATABASES.MYSQL.DBNAME=xxx_db
+      - DATABASES.REDIS.DRIVER=redis
+      - DATABASES.REDIS.HOST=service-redis
+      - DATABASES.REDIS.PORT=6379
+    command: make test_and_sonar
+
+  service-redis:
+    image: ${REGISTRY_HOST:-xxx.xxx.com.cn}/xxx-base/redis:latest
+
+  service-mysql:
+    build:
+      context: ./test/env/mysql
+    command:
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: "xxx"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "pass"
+      TZ: Asia/Shanghai
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--protocol=tcp"]
+      timeout: 20s
+      interval: 1s
+      retries: 20
+
+  proto-build:
+    working_dir: /work
+    command: bash -c "make proto"
+    volumes:
+      - $PWD:/work
+    image:xxx/xxx-base/proto-kit

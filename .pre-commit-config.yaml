@@ -1,0 +1,12 @@
+repos:
+  - repo: https://gitlab.xxx.com/xxx-public/pre-commit-golang
+    rev: v0.4.0
+    hooks:
+      - id: go-fmt
+        exclude: "^(vendor/.*)$"
+      - id: go-vet
+        exclude: "^(vendor/.*)$"
+      - id: go-imports
+        exclude: "^(vendor/.*)$"
+      - id: go-mod-tidy
+        exclude: "^(vendor/.*)$"

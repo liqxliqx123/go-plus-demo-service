@@ -1,0 +1,38 @@
+include:
+  - project: "xxx"
+    ref: improve/unify_ci
+    file: "/xxx/xxx-ci-go.yaml"
+
+variables:
+  SERVICE_NAME: my-demo-service
+  API_GATEWAY_PREFIX: demo
+  PORT: 8080
+
+
+stage01-daily_xxx:
+  image: ${CI_DEPLOY_BASE_IMAGE}-py
+  stage: deploy
+  when: manual
+  variables:
+    CI_DEBUG_TRACE: "true"
+    ENV: xxx
+    ARGO_NAMESPACE: xxx
+    APOLLO_TOKEN: xxx
+    APOLLO_HOST: xxx
+    APOLLO_NAMESPACE: xxx
+    K8S_CONFIG: xxx
+    BELUGA_ENDPOINT: xxx
+    BELUGA_AUTH_TOKEN: xxx
+    BELUGA_TASK_IMAGE: xxx
+    ELASTIC_APM_SECRET_TOKEN: xxx
+  script:
+    - mkdir $HOME/.kube
+    - echo -n $K8S_CONFIG | base64 -d > $HOME/.kube/config
+    - |
+      sed -e "s|\$ARGO_NAMESPACE|$ARGO_NAMESPACE|" \
+          -e "s|\$APOLLO_TOKEN|$APOLLO_TOKEN|" \
+          -e "s|\$ELASTIC_APM_SECRET_TOKEN|$ELASTIC_APM_SECRET_TOKEN|" \
+          cmd/daily_xxx_cron/apollo_secret.yml.template | kubectl apply --namespace=$ARGO_NAMESPACE -f -
+    - python3 cmd/daily_xxx_cron/beluga.py $BELUGA_ENDPOINT $BELUGA_AUTH_TOKEN $BELUGA_TASK_IMAGE $ENV
+  tags:
+    - aws-devops-runner
